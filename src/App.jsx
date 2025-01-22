@@ -8,9 +8,7 @@ function App() {
   const [silver, setSilver]=useState(0)
   const [bronze, setBronze]=useState(0)
 
-  const [countrys, setCountrys]=useState([
-    {name:"test", gold:2, silver:3, bronze:4}
-  ])
+  const [countrys, setCountrys]=useState([])
 
 
   const Clickadd=(e)=>{
@@ -56,7 +54,6 @@ function App() {
     alert("삭제하기가 눌렸습니다")
     const result = countrys.filter((country) => country.name!==name);
     setCountrys([...result])
-
   }
 
   return (
@@ -71,13 +68,12 @@ function App() {
         </div>
         <form onSubmit={Clickadd} id='addupdate'>
             <input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input id="gold" value={gold} onChange={(e) => setGold(e.target.value)} type="number"/>
-            <input id="silver" value={silver} onChange={(e) => setSilver(e.target.value)} type="number"/>
-            <input id="bronze" value={bronze} onChange={(e) => setBronze(e.target.value)} type="number"/>
-            <input type='submit' form='addupdate' value="국가추가" name='ADD'/>
-            <input type='button' form='addupdate' value="업데이트" name='UPDATE' onClick={ClickUpadte}/>
+            <input id="gold" value={gold} onChange={(e) => setGold(e.target.value)} type="number" min="0"/>
+            <input id="silver" value={silver} onChange={(e) => setSilver(e.target.value)} type="number" min="0" />
+            <input id="bronze" value={bronze} onChange={(e) => setBronze(e.target.value)} type="number" min="0"/>
+            <input type='submit' form='addupdate' value="국가추가" name='ADD' className='likebutton'/>
+            <input type='button' form='addupdate' value="업데이트" name='UPDATE' onClick={ClickUpadte} className='likebutton'/>
           </form>
-        
       </div>
 
       <div style={{display:"grid", placeItems: "center", width:"100%"}}>
@@ -99,8 +95,7 @@ function App() {
                 <p>{country.bronze}</p>
                 <p><button onClick={()=>ClickDelete(country.name)}>삭제하기</button></p>
               </div>
-               )
-          })
+              )})
         }
         </div>
       </div>

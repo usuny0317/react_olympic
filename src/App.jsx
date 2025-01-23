@@ -1,28 +1,49 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
-  
-  const [name,setName]=useState()
+  const [name,setName]=useState("")
   const [gold, setGold] =useState(0)
   const [silver, setSilver]=useState(0)
   const [bronze, setBronze]=useState(0)
-
   const [countrys, setCountrys]=useState([])
+  const [ischeck,setIscheck]=useState(false)
+
+  useEffect(() => {
+    const sorted = sortcountry([...countrys]); 
+    setCountrys(sorted);
+  }, [ischeck]);  
+
+  function sortcountry(before){
+    if(ischeck){
+      return before.sort((a,b)=>{
+        const totala=Number(a.gold)+Number(a.silver)+Number(a.bronze);
+        const totalb=Number(b.gold)+Number(b.silver)+Number(b.bronze);
+        return totalb-totala
+      })
+    }
+    else{
+      return before.sort((a,b)=>b.gold-a.gold)
+    }
+  }
 
 
   const Clickadd=(e)=>{
     e.preventDefault();
     const has = countrys.findIndex((item) => item.name === name);
     if(has!=-1){alert("이미 존재합니다."); return ;}
-    else if(name=="" || name == undefined){alert("값이 비었습니다."); return ;}
+    else if(name=="" || name == undefined){alert("국가명을 입력해주세요"); return ;}
     else{const newCountry={
       name: name,
       gold: gold,
       silver: silver,
       bronze: bronze
     };
-    setCountrys([...countrys,newCountry]); }
+
+    const beforesort=[...countrys,newCountry];
+    const aftersort=sortcountry(beforesort)
+    setCountrys(aftersort); 
+  }
 
     setName("");
     setGold(0);
@@ -42,7 +63,9 @@ function App() {
         silver: silver,
         bronze: bronze
       }
-      setCountrys([...result,updateCountry])
+      const beforesort=[...result,updateCountry];
+      const aftersort=sortcountry(beforesort)
+      setCountrys(aftersort); 
     }
     setName("");
     setGold(0);
@@ -53,38 +76,36 @@ function App() {
   function ClickDelete(name){
     alert("삭제하기가 눌렸습니다")
     const result = countrys.filter((country) => country.name!==name);
-    setCountrys([...result])
+    const aftersort=sortcountry(result)
+    setCountrys([...aftersort])
   }
 
   return (
     <>
       <div style={{backgroundColor: 'white', color:'black', padding:"50px", boxShadow:"2px"}}>
-        <h1 style={{color:'blue'}}>2024 파리 올림픽</h1>
-        <div style={{display:"flex",  gap: "1%", width:"100%"}}> 
-          <p>국가명</p>
-          <p>금메달</p>
-          <p>은메달</p>
-          <p>동메달</p>
-        </div>
-        <form onSubmit={Clickadd} id='addupdate'>
-            <input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input id="gold" value={gold} onChange={(e) => setGold(e.target.value)} type="number" min="0"/>
-            <input id="silver" value={silver} onChange={(e) => setSilver(e.target.value)} type="number" min="0" />
-            <input id="bronze" value={bronze} onChange={(e) => setBronze(e.target.value)} type="number" min="0"/>
-            <input type='submit' form='addupdate' value="국가추가" name='ADD' className='likebutton'/>
-            <input type='button' form='addupdate' value="업데이트" name='UPDATE' onClick={ClickUpadte} className='likebutton'/>
+        <h1 style={{color:'#99bdd6'}}>2024 파리 올림픽</h1>
+        <span><input type="checkbox"
+            onChange={(e) => setIscheck(e.target.checked)}
+            checked={ischeck}/>메달의 총 개수로 정렬하기</span>
+        <form onSubmit={Clickadd} id='addupdate' style={{display:"flex",  gap: "1%", width:"100%"}}>
+          <label>국가명<input id="name" value={name} onChange={(e) => setName(e.target.value)} /></label>
+          <label>금메달<input id="gold" value={gold} onChange={(e) => setGold(e.target.value)} type="number" min="0"/></label>
+          <label>은메달<input id="silver" value={silver} onChange={(e) => setSilver(e.target.value)} type="number" min="0" /></label>
+          <label>동메달<input id="bronze" value={bronze} onChange={(e) => setBronze(e.target.value)} type="number" min="0"/></label>
+          <input type='submit' form='addupdate' value="국가추가" name='ADD' className='likebutton'/>
+          <input type='button' form='addupdate' value="업데이트" name='UPDATE' onClick={ClickUpadte} className='likebutton'/>
           </form>
       </div>
 
       <div style={{display:"grid", placeItems: "center", width:"100%"}}>
-        <div style={{display:"flex",  gap: "5%", backgroundColor:"blue", width:"100%"}}> 
+        <div style={{display:"flex",  gap: "5%", backgroundColor:"#99bdd6", width:"100%"}}> 
           <p>국가명</p>
           <p>금메달</p>
           <p>은메달</p>
           <p>동메달</p>
           <p>액션</p>
         </div>
-        <div style={{backgroundColor:"skyblue", width:"100%", color:"black"}}>
+        <div style={{backgroundColor:"#6b96ad", width:"100%", color:"black"}}>
         {
           countrys.map((country)=>{
             return (
